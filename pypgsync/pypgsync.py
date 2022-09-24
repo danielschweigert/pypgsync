@@ -16,8 +16,9 @@ logger.addHandler(ch)
 
 
 def get_n_records_in_table(cur: psycopg.Cursor, table_name: str) -> int:
-    """Get the number of records in a table"""
-
+    """
+    Get the number of records in a table
+    """
     sql_count = f"""SELECT COUNT(*) FROM {table_name}"""
     cur.execute(sql_count)
     n_records = cur.fetchone()[0]
@@ -32,22 +33,22 @@ def copy_records(cur_source: psycopg.Cursor, con_destination: psycopg.Connection
     Returns the number of records copied.
     """
     cur_destination = con_destination.cursor()
-    logger.info(f"Fetching {limit} last records from source table {table_name} using offset "
-                f"{offset}")
+    logger.debug(f"Fetching {limit} last records from source table {table_name} using offset "
+                 f"{offset}")
     sql_select = f"""SELECT * FROM {table_name} OFFSET {offset} LIMIT {limit}"""
     cur_source.execute(sql_select)
     records = cur_source.fetchall()
     n_records = len(records)
-    logger.info(f"Fetched {n_records} records in source table {table_name}")
+    logger.debug(f"Fetched {n_records} records in source table {table_name}")
     if n_records > 0:
-        logger.info(f"Inserting {n_records} records in destination table {table_name}")
+        logger.debug(f"Inserting {n_records} records in destination table {table_name}")
         n_fields = len(records[0])
         sql_insert = f"""INSERT INTO {table_name} VALUES ({','.join(['%s'] * n_fields)})"""
         cur_destination.executemany(sql_insert, records)
         con_destination.commit()
-        logger.info(f"Inserted {n_records} records in destination table {table_name}")
+        logger.debug(f"Inserted {n_records} records in destination table {table_name}")
     else:
-        logger.info(f"Nothing to insert in destination table {table_name}")
+        logger.debug(f"Nothing to insert in destination table {table_name}")
     return n_records
 
 
@@ -58,6 +59,7 @@ def sync_table(cur_source: psycopg.Cursor, con_destination: psycopg.Connection, 
 
     Divide sync volume into chunks of count chunk_size.
     """
+    logger.info(f"Syncing table {table_name}")
     n_records_source = get_n_records_in_table(cur_source, table_name)
     n_records_destination = get_n_records_in_table(con_destination.cursor(), table_name)
     logger.info(f"Table {table_name} has source records: {n_records_source}, "
@@ -80,6 +82,7 @@ def sync(cur_source: psycopg.Cursor, con_destination: psycopg.Connection, tables
 
     Divide sync volume into chunks of count chunk_size.
     """
+    logger.info(f"Syncing tables {tables}")
     for table in tables:
-        logger.info(f"Syncing table {table}")
         sync_table(cur_source, con_destination, table, chunk_size)
+    logger.info(f"Syncing of tables {tables} completed.")
