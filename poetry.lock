@@ -46,6 +46,17 @@ tomli = {version = "*", optional = true, markers = "python_full_version <= \"3.1
 toml = ["tomli"]
 
 [[package]]
+name = "coverage-badge"
+version = "1.1.0"
+description = "Generate coverage badges for Coverage.py."
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+coverage = "*"
+
+[[package]]
 name = "flake8"
 version = "5.0.4"
 description = "the modular source code checker: pep8 pyflakes and co"
@@ -267,7 +278,7 @@ python-versions = ">=2"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "52e5d2c7b507d8fd5fbc37daa2eed8be8bbc1b5331aa9317da850133a368bdc2"
+content-hash = "3fe2730d9439e5b522b6a04147171d4d2d3128307ae291ff82ce18dc1e001bd1"
 
 [metadata.files]
 attrs = []
@@ -277,6 +288,7 @@ colorama = [
     {file = "colorama-0.4.5.tar.gz", hash = "sha256:e6c6b4334fc50988a639d9b98aa429a0b57da6e17b9a44f0451f930b6967b7a4"},
 ]
 coverage = []
+coverage-badge = []
 flake8 = []
 iniconfig = []
 mccabe = [
