@@ -1,9 +1,11 @@
 [tool.poetry]
 name = "pypgsync"
-version = "1.0.3"
+version = "1.0.4"
 description = ""
 authors = ["Daniel Schweigert <dan.schweigert@gmail.com>"]
 readme = "README.md"
+repository = "https://github.com/danielschweigert/pypgsync"
+homepage = "https://github.com/danielschweigert/pypgsync"
 
 [tool.poetry.dependencies]
 python = "^3.8"
