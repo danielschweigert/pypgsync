@@ -1,5 +1,5 @@
 ![test-badge](https://github.com/danielschweigert/pypgsync/actions/workflows/lint-and-test.yml/badge.svg)
-![coverage-badge](https://raw.githubusercontent.com/danielschweigert/pypgsync/main/coverage.svg)
+![coverage-badge](https://raw.githubusercontent.com/danielschweigert/pypgsync/main/coverage-manual.svg)
 
 # pypgsync
 Python utility to sync two postgresql databases

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pypgsync"
-version = "1.0.2"
+version = "1.0.3"
 description = ""
 authors = ["Daniel Schweigert <dan.schweigert@gmail.com>"]
 readme = "README.md"
