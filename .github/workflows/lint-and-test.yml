@@ -36,4 +36,4 @@ jobs:
     - name: Test with pytest
       run: |
         poetry run pytest --cov=pypgsync
-        coverage-badge -o coverage.svg
+        poetry run coverage-badge -o coverage.svg
