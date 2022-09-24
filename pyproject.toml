@@ -1,12 +1,14 @@
 [tool.poetry]
 name = "pypgsync"
-version = "1.0.0"
+version = "1.0.2"
 description = ""
 authors = ["Daniel Schweigert <dan.schweigert@gmail.com>"]
+readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.8"
 psycopg = "^3.1.2"
+pytest-cov = "^3.0.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^7.1.3"

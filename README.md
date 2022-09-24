@@ -1,3 +1,5 @@
+![example workflow](https://github.com/danielschweigert/pypgsync/actions/workflows/lint-and-test.yml/badge.svg)
+
 # pypgsync
 Python utility to sync two postgresql databases
 
