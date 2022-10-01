@@ -9,8 +9,6 @@ from typing import Any
 def convert_return_value_to_python_type(value) -> Any:
     """
     Convert return types to basic python types
-
-    TODO: unit test
     """
     if isinstance(value, decimal.Decimal):
         return float(value)
