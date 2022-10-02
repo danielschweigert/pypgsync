@@ -5,6 +5,8 @@ be re-used
 from typing import List, Dict
 import psycopg
 
+from pypgsync.util.conversion import convert_return_value_to_python_type
+
 
 def get_primary_keys(cur: psycopg.Cursor, table_names: List[str]) -> List[str]:
     """
@@ -50,3 +52,40 @@ def get_column_set_diff(cur_db_1: psycopg.Cursor, cur_db_2: psycopg.Cursor, tabl
         "not_in_db_2": set(values_db_1).difference(set(values_db_2)),
     }
     return result
+
+
+def get_column_records_for_primary_key_subset(cur: psycopg.Cursor, table_name: str,
+                                              column_names: List[str], primary_key_column: str,
+                                              pk_values: List) -> List[Dict]:
+    """
+    Get records for column and primary key for a subset of primary keys. Sorted by primary key.
+    """
+    if pk_values is None or len(pk_values) == 0:
+        return []
+
+    if column_names is None or len(column_names) == 0:
+        return []
+
+    if type(pk_values[0]) == str:
+        in_condition = ",".join([f"'{pk_value}'" for pk_value in pk_values])
+    elif type(pk_values[0]) == int:
+        in_condition = ",".join([f"{pk_value}" for pk_value in pk_values])
+    else:
+        raise ValueError("Primary key values must be either strings or integers")
+
+    column_names_str = ",".join(column_names)
+    sql = f"""
+        SELECT
+            {primary_key_column},
+            {column_names_str}
+        FROM {table_name}
+        WHERE {primary_key_column} IN ({in_condition})
+        ORDER BY {primary_key_column}"""
+    cur.execute(sql)
+    records = []
+    for row in cur.fetchall():
+        record = {column_name: convert_return_value_to_python_type(row[i + 1])
+                  for i, column_name in enumerate(column_names)}
+        record[primary_key_column] = row[0]
+        records.append(record)
+    return records

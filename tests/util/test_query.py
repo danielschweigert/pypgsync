@@ -2,8 +2,12 @@
 Unit test for the query module.
 """
 import pytest
-from pypgsync.util.query import get_primary_keys, get_column_records, get_column_set_diff
+from typing import List, Dict, Any, Optional
+from pypgsync.util.query import get_primary_keys, get_column_records, get_column_set_diff, \
+    get_column_records_for_primary_key_subset
+from pypgsync.util.create import insert_records
 from tests.case_build import create_sql_insert_records_table_a, populate_all_tables
+from tests.util.case_data_util import case_data
 
 
 @pytest.mark.usefixtures("con_source")
@@ -72,3 +76,36 @@ def test_get_column_set_diff(con_source, con_destination, n_table_b_source, n_ta
 
     detailed_diff_test(cur_source, cur_destination)
     detailed_diff_test(cur_destination, cur_source)
+
+
+@pytest.mark.usefixtures("con_source")
+@pytest.mark.parametrize("records, column_names, pk_subset",
+                         case_data["query"]["test_get_column_records_for_primary_key_subset"])
+def test_get_column_records_for_primary_key_subset(con_source, records, column_names, pk_subset):
+
+    table_name = "table_a"
+    primary_key = "id"
+
+    insert_records(con=con_source, table_name=table_name, records=records)
+
+    cur_source = con_source.cursor()
+    result = get_column_records_for_primary_key_subset(cur=cur_source, table_name=table_name,
+                                                       column_names=column_names,
+                                                       primary_key_column=primary_key,
+                                                       pk_values=pk_subset)
+
+    def find_record_by_pk(records: List, pv_value: Any) -> Optional[Dict]:
+        for record in records:
+            if record[primary_key] == pv_value:
+                return record
+        return None
+
+    if len(pk_subset) == 0 or len(column_names) == 0:
+        assert result == []
+    else:
+        assert len(result) == len(pk_subset)
+        for row in result:
+            assert len(row) == len(column_names) + 1
+            record = find_record_by_pk(records, row[primary_key])
+            for column_name in column_names:
+                assert row[column_name] == record[column_name]
