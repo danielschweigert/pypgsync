@@ -3,7 +3,8 @@ Implementation of the primary key mode, which is used to sync the tables by sele
 """
 from typing import List, Dict
 import psycopg
-from pypgsync.util.query import get_column_set_diff, get_column_records_for_primary_key_subset
+from pypgsync.util.query import get_column_set_diff, get_column_records_for_primary_key_subset, \
+    get_table_column_names
 
 
 def row_delta_by_primary_key(cur_source: psycopg.Cursor, cur_destination: psycopg.Cursor,
@@ -14,12 +15,23 @@ def row_delta_by_primary_key(cur_source: psycopg.Cursor, cur_destination: psycop
     diff = get_column_set_diff(cur_db_1=cur_source, cur_db_2=cur_destination, table_name=table_name,
                                column_name=primary_key)
 
+    intersection = diff["intersection"]
+    delete = diff["not_in_db_1"]
+    insert_pk_values = list(diff["not_in_db_2"])
+
+    column_names = get_table_column_names(cur=cur_source, table_name=table_name)
+    records_to_insert = get_column_records_for_primary_key_subset(cur=cur_source,
+                                                                  table_name=table_name,
+                                                                  column_names=column_names,
+                                                                  primary_key_column=primary_key,
+                                                                  pk_values=insert_pk_values)
+
     response = {
         "table_name": table_name,
         "primary_key": primary_key,
-        "intersection": diff["intersection"],
-        "delete": diff["not_in_db_1"],
-        "insert": diff["not_in_db_2"],
+        "intersection": intersection,
+        "delete": delete,
+        "insert": records_to_insert,
     }
 
     return response
