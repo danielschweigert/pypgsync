@@ -1,7 +1,6 @@
 """
 Unit test for delete functions
 """
-from typing import List
 import pytest
 from pypgsync.util.query import get_column_values
 from pypgsync.util.create import insert_records

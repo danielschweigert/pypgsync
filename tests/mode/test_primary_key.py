@@ -3,8 +3,10 @@ Unit test for the primary key mode module.
 """
 import pytest
 from pypgsync.mode.primarykey import row_delta_by_primary_key, record_delta_by_primary_key, \
-    delta_by_primary_key
+    delta_by_primary_key, apply_delta_by_primary_key
 from pypgsync.util.create import insert_records
+from pypgsync.util.query import get_column_records_for_primary_key_subset, get_table_column_names, \
+    get_column_values
 from tests.mode.case_data_mode import case_data
 
 
@@ -71,3 +73,25 @@ def test_delta_by_primary_key(con_source, con_destination, records_source, recor
                                   pk_values)
 
     assert result == expected_result
+
+
+@pytest.mark.usefixtures("con_source")
+@pytest.mark.parametrize("records, delta, expected_remaining",
+                         case_data["primarykey"]["test_apply_delta_by_primary_key"])
+def test_apply_delta_by_primary_key(con_source, records, delta, expected_remaining):
+
+    table_name = delta["table_name"]
+    primary_key = delta["primary_key"]
+    insert_records(con=con_source, table_name=table_name, records=records)
+
+    apply_delta_by_primary_key(con_source, delta)
+
+    cur_source = con_source.cursor()
+    column_names = get_table_column_names(cur=cur_source, table_name=table_name)
+    pk_values = get_column_values(cur=cur_source, table_name=table_name, column_name=primary_key)
+    remaining = get_column_records_for_primary_key_subset(cur=cur_source, table_name=table_name,
+                                                          column_names=column_names,
+                                                          primary_key_column=primary_key,
+                                                          pk_values=pk_values)
+
+    assert remaining == expected_remaining

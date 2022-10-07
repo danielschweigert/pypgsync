@@ -215,5 +215,45 @@ case_data = {
                 }
             )
         ],
+        "test_apply_delta_by_primary_key": [
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }, ],
+                {
+                    "table_name": "table_a",
+                    "primary_key": "id",
+                    "intersection": set([1, 2]),
+                    "delete": set([3, ]),
+                    "insert": [{"id": 5, "my_varchar": "e", "my_int": 5, "my_float": 3.2}],
+                    "update": [{"id": 2, "my_int": 20}, ]
+                },
+                [
+                    {"id": 1, "my_varchar": "a", "my_int": 1, "my_float": None, "my_decimal": None,
+                     "my_date": None, "my_timestamp": None},
+                    {"id": 2, "my_varchar": "b", "my_int": 20, "my_float": None, "my_decimal": None,
+                     "my_date": None, "my_timestamp": None},
+                    {"id": 5, "my_varchar": "e", "my_int": 5, "my_float": 3.2, "my_decimal": None,
+                     "my_date": None, "my_timestamp": None},
+                 ]
+            ),
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }, ],
+                {
+                    "table_name": "table_a",
+                    "primary_key": "id",
+                    "intersection": set([]),
+                    "delete": set([1, 2, 3, ]),
+                    "insert": [{"id": 5, "my_varchar": "e", "my_int": 5, "my_float": 3.2}],
+                    "update": []
+                },
+                [
+                    {"id": 5, "my_varchar": "e", "my_int": 5, "my_float": 3.2, "my_decimal": None,
+                     "my_date": None, "my_timestamp": None},
+                ]
+            ),
+        ]
     },
 }
