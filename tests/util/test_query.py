@@ -4,7 +4,7 @@ Unit test for the query module.
 import pytest
 from typing import List, Dict, Any, Optional
 from pypgsync.util.query import get_primary_keys, get_column_records, get_column_set_diff, \
-    get_column_records_for_primary_key_subset, get_table_column_names
+    get_column_records_for_primary_key_subset, get_table_column_names, get_column_values
 from pypgsync.util.create import insert_records
 from tests.case_build import create_sql_insert_records_table_a, populate_all_tables
 from tests.util.case_data_util import case_data
@@ -16,6 +16,26 @@ def test_get_primary_keys(con_source):
     cur_source = con_source.cursor()
     primary_keys = get_primary_keys(cur=cur_source, table_names=["table_a", "table_b"])
     assert primary_keys == {'table_a': 'id', 'table_b': 'id'}
+
+
+@pytest.mark.usefixtures("con_source")
+def test_get_column_values(con_source):
+
+    table_name = "table_a"
+    column_name = "my_int"
+
+    cur_source = con_source.cursor()
+    result_1 = get_column_values(cur=cur_source, table_name=table_name, column_name=column_name)
+    assert result_1 == []
+
+    records = [{"id": 1, "my_int": 10}, {"id": 2, "my_int": 100}, {"id": 3, "my_int": 1000}]
+    insert_records(con=con_source, table_name=table_name, records=records)
+
+    result_2 = get_column_values(cur=cur_source, table_name=table_name, column_name="id")
+    assert result_2 == [1, 2, 3]
+
+    result_3 = get_column_values(cur=cur_source, table_name=table_name, column_name="my_int")
+    assert result_3 == [10, 100, 1000]
 
 
 @pytest.mark.usefixtures("con_source")
