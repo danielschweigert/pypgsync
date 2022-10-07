@@ -6,8 +6,11 @@ import psycopg
 from pypgsync.util.query import get_column_set_diff, get_column_records_for_primary_key_subset
 
 
-def primary_key_delta(cur_source: psycopg.Cursor, cur_destination: psycopg.Cursor, table_name: str,
-                      primary_key: str) -> List[Dict]:
+def row_delta_by_primary_key(cur_source: psycopg.Cursor, cur_destination: psycopg.Cursor,
+                             table_name: str, primary_key: str) -> List[Dict]:
+    """
+    Get primary key ids which mismatch between the source and destination databases
+    """
     diff = get_column_set_diff(cur_db_1=cur_source, cur_db_2=cur_destination, table_name=table_name,
                                column_name=primary_key)
 
