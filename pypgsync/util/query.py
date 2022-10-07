@@ -31,6 +31,14 @@ def get_primary_keys(cur: psycopg.Cursor, table_names: List[str]) -> List[str]:
     return primary_keys
 
 
+def get_table_columns(cur: psycopg.Cursor, table_name: str) -> List[str]:
+    """For a given table, return all column names in the database"""
+    sql = f"""SELECT * FROM {table_name} LIMIT 1;"""
+    cur.execute(sql)
+    column_names = [desc[0] for desc in cur.description]
+    return column_names
+
+
 def get_column_records(cur: psycopg.Cursor, table_name: str, column_name: str) -> List[str]:
     """
     Get the records for a single column in a table
