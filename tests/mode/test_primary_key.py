@@ -2,7 +2,8 @@
 Unit test for the primary key mode module.
 """
 import pytest
-from pypgsync.mode.primarykey import primary_key_delta
+from pypgsync.mode.primarykey import primary_key_delta, record_delta_by_primary_key
+from pypgsync.util.create import insert_records
 from tests.case_build import populate_all_tables
 from tests.mode.case_data_mode import case_data
 
@@ -36,3 +37,25 @@ def test_primary_key_delta(con_source, con_destination, b_records_source, b_reco
     assert result["insert"] == insert
     assert result["table_name"] == "table_b"
     assert result["primary_key"] == "id"
+
+
+@pytest.mark.usefixtures("con_source", "con_destination")
+@pytest.mark.parametrize("records_source, records_destination, columns, pk_values, expected_udates",
+                         case_data["primarykey"]["test_record_delta_by_primary_key"])
+def test_record_delta_by_primary_key(con_source, con_destination, records_source,
+                                     records_destination, columns, pk_values, expected_udates):
+
+    table_name = "table_a"
+    primary_key = "id"
+
+    insert_records(con=con_source, table_name=table_name, records=records_source)
+    insert_records(con=con_destination, table_name=table_name, records=records_destination)
+
+    cur_source = con_source.cursor()
+    cur_destination = con_destination.cursor()
+    delta = record_delta_by_primary_key(cur_source, cur_destination, table_name, primary_key,
+                                        columns, pk_values)
+
+    assert delta["table_name"] == table_name
+    assert delta["primary_key"] == primary_key
+    assert delta["update"] == expected_udates
