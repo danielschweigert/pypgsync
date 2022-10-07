@@ -40,10 +40,11 @@ def test_row_delta_by_primary_key(con_source, con_destination, b_records_source,
 
 
 @pytest.mark.usefixtures("con_source", "con_destination")
-@pytest.mark.parametrize("records_source, records_destination, columns, pk_values, expected_udates",
-                         case_data["primarykey"]["test_record_delta_by_primary_key"])
+@pytest.mark.parametrize(
+    "records_source, records_destination, columns, pk_values, expected_updates",
+    case_data["primarykey"]["test_record_delta_by_primary_key"])
 def test_record_delta_by_primary_key(con_source, con_destination, records_source,
-                                     records_destination, columns, pk_values, expected_udates):
+                                     records_destination, columns, pk_values, expected_updates):
 
     table_name = "table_a"
     primary_key = "id"
@@ -58,4 +59,4 @@ def test_record_delta_by_primary_key(con_source, con_destination, records_source
 
     assert delta["table_name"] == table_name
     assert delta["primary_key"] == primary_key
-    assert delta["update"] == expected_udates
+    assert delta["update"] == expected_updates
