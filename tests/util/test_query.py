@@ -4,7 +4,7 @@ Unit test for the query module.
 import pytest
 from typing import List, Dict, Any, Optional
 from pypgsync.util.query import get_primary_keys, get_column_records, get_column_set_diff, \
-    get_column_records_for_primary_key_subset, get_table_columns
+    get_column_records_for_primary_key_subset, get_table_column_names
 from pypgsync.util.create import insert_records
 from tests.case_build import create_sql_insert_records_table_a, populate_all_tables
 from tests.util.case_data_util import case_data
@@ -19,13 +19,13 @@ def test_get_primary_keys(con_source):
 
 
 @pytest.mark.usefixtures("con_source")
-def test_get_table_columns(con_source):
+def test_get_table_column_names(con_source):
 
     cur_source = con_source.cursor()
-    columns = get_table_columns(cur=cur_source, table_name="table_a")
+    columns = get_table_column_names(cur=cur_source, table_name="table_a")
     assert columns == ["id", "my_varchar", "my_int", "my_float", "my_decimal", "my_date",
                        "my_timestamp"]
-    columns = get_table_columns(cur=cur_source, table_name="table_b")
+    columns = get_table_column_names(cur=cur_source, table_name="table_b")
     assert columns == ["id", "a_id"]
 
 
