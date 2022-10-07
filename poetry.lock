@@ -154,6 +154,7 @@ python-versions = ">=3.7"
 
 [package.dependencies]
 "backports.zoneinfo" = {version = ">=0.2.0", markers = "python_version < \"3.9\""}
+psycopg-binary = {version = "3.1.2", optional = true, markers = "extra == \"binary\""}
 typing-extensions = {version = ">=4.1", markers = "python_version < \"3.11\""}
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
@@ -164,6 +165,14 @@ dev = ["black (>=22.3.0)", "dnspython (>=2.1)", "flake8 (>=4.0)", "mypy (>=0.940
 docs = ["Sphinx (>=5.0)", "furo (==2022.6.21)", "sphinx-autobuild (>=2021.3.14)", "sphinx-autodoc-typehints (>=1.12)"]
 pool = ["psycopg-pool"]
 test = ["mypy (>=0.940)", "pproxy (>=2.7)", "pytest (>=6.2.5)", "pytest-asyncio (>=0.17)", "pytest-cov (>=3.0)", "pytest-randomly (>=3.10)"]
+
+[[package]]
+name = "psycopg-binary"
+version = "3.1.2"
+description = "PostgreSQL database adapter for Python -- C optimisation distribution"
+category = "main"
+optional = false
+python-versions = ">=3.7"
 
 [[package]]
 name = "py"
@@ -269,7 +278,7 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "tzdata"
-version = "2022.2"
+version = "2022.4"
 description = "Provider of IANA time zone data"
 category = "main"
 optional = false
@@ -278,7 +287,7 @@ python-versions = ">=2"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.8"
-content-hash = "3fe2730d9439e5b522b6a04147171d4d2d3128307ae291ff82ce18dc1e001bd1"
+content-hash = "00aac87235b5c022524f84dbf0226c3ba64496fa247af96ac4f5410b30d88826"
 
 [metadata.files]
 attrs = []
@@ -304,6 +313,7 @@ pluggy = []
 port-for = []
 psutil = []
 psycopg = []
+psycopg-binary = []
 py = [
     {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
     {file = "py-1.11.0.tar.gz", hash = "sha256:51c75c4126074b472f746a24399ad32f6053d1b34b68d2fa41e558e6f4a98719"},

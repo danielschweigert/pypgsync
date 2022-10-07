@@ -1,18 +1,12 @@
 """
 Functions and helper functions to sync tables in a database
 """
-import logging
 import psycopg
 from typing import List
+from pypgsync.util.log import get_logger
 
 
-logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
-ch = logging.StreamHandler()
-ch.setLevel(logging.DEBUG)
-formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-ch.setFormatter(formatter)
-logger.addHandler(ch)
+logger = get_logger()
 
 
 def get_n_records_in_table(cur: psycopg.Cursor, table_name: str) -> int:
