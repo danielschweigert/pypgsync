@@ -65,3 +65,19 @@ def record_delta_by_primary_key(cur_source: psycopg.Cursor, cur_destination: psy
     }
 
     return result
+
+
+def delta_by_primary_key(cur_source: psycopg.Cursor, cur_destination: psycopg.Cursor,
+                         table_name: str, primary_key: str, columns: List[str],
+                         pk_values: List) -> Dict:
+    """
+    Get the records that are different between the source and destination databases for selected
+    table, columns and primary key values
+    """
+    row_delta = row_delta_by_primary_key(cur_source, cur_destination, table_name, primary_key)
+
+    subset_pk_values = [pk for pk in row_delta["intersection"] if pk in pk_values]
+    record_delta = record_delta_by_primary_key(cur_source, cur_destination, table_name,
+                                               primary_key, columns, pk_values=subset_pk_values)
+    row_delta["update"] = record_delta["update"]
+    return row_delta
