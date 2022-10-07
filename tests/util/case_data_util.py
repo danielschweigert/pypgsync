@@ -1,6 +1,9 @@
 """
 Case data for tests in util package
 """
+from datetime import datetime, date
+from decimal import Decimal
+
 standard_records = [
     {"id": 1, "my_varchar": "a", "my_int": 1, "my_float": 1.2, "my_decimal": 10.12,
      "my_date": "2022-10-01", "my_timestamp": "2011-05-16T15:36:38"},
@@ -27,6 +30,52 @@ case_data = {
             ("table_a", [{"id": 1, "my_varchar": "a", "my_int": 1, }, {"id": 2, "my_int": 3, }]),
             ("table_a", []),
             ("table_a", [{"id": 1}, {"id": 2}, {"id": 3}]),
+        ]
+    },
+    "update": {
+        "test_point_update": [
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }],
+                "my_varchar", "x",
+                "id", 3
+            ),
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }],
+                "my_int", 5,
+                "id", 2
+            ),
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }],
+                "my_float", 5.2,
+                "id", 2
+            ),
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }],
+                "my_decimal", Decimal("5.2"),
+                "id", 2
+            ),
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }],
+                "my_date", date.today(),
+                "id", 2
+            ),
+            (
+                [{"id": 1, "my_varchar": "a", "my_int": 1, },
+                 {"id": 2, "my_varchar": "b", "my_int": 2, },
+                 {"id": 3, "my_varchar": "c", "my_int": 3, }],
+                "my_timestamp", datetime.now(),
+                "id", 2
+            )
         ]
     }
 }
