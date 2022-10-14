@@ -1,6 +1,3 @@
-"""
-Functions and helper functions to sync tables in a database
-"""
 import psycopg
 from typing import List
 from pypgsync.util.log import get_logger

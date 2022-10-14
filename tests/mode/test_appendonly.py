@@ -1,5 +1,8 @@
+"""
+Unit test for functions in append only mode
+"""
 import pytest
-from pypgsync.pypgsync import get_n_records_in_table, copy_records, sync_table, sync
+from pypgsync.mode.appendonly import get_n_records_in_table, copy_records, sync_table, sync
 from tests.case_data_pypgsync import case_data
 from tests.case_build import populate_all_tables
 
