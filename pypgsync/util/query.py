@@ -45,7 +45,7 @@ def get_table_column_names(cur: psycopg.Cursor, table_name: str) -> List[str]:
     """For a given table, return all column names in the database"""
     sql = f"""SELECT * FROM {table_name} LIMIT 1;"""
     cur.execute(sql)
-    column_names = [f'"{desc[0]}"' if not desc[0] == "id" else desc[0] for desc in cur.description]
+    column_names = [desc[0] for desc in cur.description]
     return column_names
 
 
