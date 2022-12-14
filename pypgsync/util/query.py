@@ -8,6 +8,8 @@ import psycopg
 from pypgsync.util.conversion import convert_return_value_to_python_type
 
 
+reserved_words=["order"]  # TODO more to be added
+
 def get_primary_keys(cur: psycopg.Cursor, table_names: List[str]) -> List[str]:
     """
     Get the primary keys for a list of tables
@@ -45,7 +47,7 @@ def get_table_column_names(cur: psycopg.Cursor, table_name: str) -> List[str]:
     """For a given table, return all column names in the database"""
     sql = f"""SELECT * FROM {table_name} LIMIT 1;"""
     cur.execute(sql)
-    column_names = [desc[0] for desc in cur.description]
+    column_names = [f'"{desc[0]}"' if desc[0] in reserved_words else desc[0] for desc in cur.description]
     return column_names
 
 
