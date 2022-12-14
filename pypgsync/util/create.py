@@ -22,7 +22,7 @@ def insert_records(con: psycopg.Connection, table_name: str, records: List[Dict]
     for record in records:
         for column_name in record.keys():
             columns_names.add(column_name)
-    columns_names = list(columns_names)
+    columns_names = [f"{col}" for col in list(columns_names)]
 
     columns_names_str = ",".join(columns_names)
     values_str = ",".join(["%s" for _ in range(len(columns_names))])
